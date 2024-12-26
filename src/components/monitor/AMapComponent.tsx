@@ -34,11 +34,100 @@ export default function AMapComponent() {
         const script = document.createElement('script')
         script.src = `https://webapi.amap.com/maps?v=2.0&key=84d50b8d0e8cbaca8e8be1a750c1c7d9&language=${
           language === 'zh' ? 'zh_cn' : 'en'
-        }&plugin=AMap.Scale,AMap.ToolBar,AMap.ControlBar,AMap.TileLayer.Traffic`
+        }&plugin=AMap.Scale,AMap.ToolBar,AMap.ControlBar,AMap.TileLayer.Traffic,AMap.MoveAnimation`
         script.async = true
         script.onload = () => resolve()
         document.head.appendChild(script)
       })
+    }
+
+    // 创建动态标记
+    const createMovingMarker = (map: any, path: number[][], isToShenzhen: boolean) => {
+      const marker = new window.AMap.Marker({
+        map: map,
+        position: path[0],
+        icon: new window.AMap.Icon({
+          size: new window.AMap.Size(12, 12),
+          image: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+              <circle cx="6" cy="6" r="6" fill="${isToShenzhen ? '#52c41a' : '#faad14'}" />
+            </svg>
+          `)}`,
+          imageSize: new window.AMap.Size(12, 12)
+        }),
+        offset: new window.AMap.Pixel(-6, -6),
+        zIndex: 100,
+        angle: 0
+      })
+
+      // 计算路径角度
+      const lineAngle = Math.atan2(
+        path[1][1] - path[0][1],
+        path[1][0] - path[0][0]
+      ) * 180 / Math.PI
+
+      marker.setAngle(lineAngle)
+
+      const passedPath: number[][] = []
+      let currentIndex = 0
+      let isMoving = true
+
+      const moveMarker = () => {
+        if (!isMoving) return
+
+        const start = path[currentIndex]
+        const end = path[currentIndex + 1]
+        
+        if (!start || !end) {
+          marker.setMap(null)
+          return
+        }
+
+        const duration = 5000 // 5秒通过一段路径
+        const startTime = Date.now()
+        
+        const animate = () => {
+          if (!isMoving) return
+
+          const currentTime = Date.now()
+          const elapsed = currentTime - startTime
+          const progress = Math.min(elapsed / duration, 1)
+
+          const currentPosition = [
+            start[0] + (end[0] - start[0]) * progress,
+            start[1] + (end[1] - start[1]) * progress
+          ]
+
+          marker.setPosition(currentPosition)
+          passedPath.push(currentPosition)
+
+          if (progress < 1) {
+            requestAnimationFrame(animate)
+          } else {
+            currentIndex++
+            if (currentIndex < path.length - 1) {
+              // 计算下一段路径的角度
+              const nextAngle = Math.atan2(
+                path[currentIndex + 1][1] - path[currentIndex][1],
+                path[currentIndex + 1][0] - path[currentIndex][0]
+              ) * 180 / Math.PI
+              marker.setAngle(nextAngle)
+              moveMarker()
+            } else {
+              marker.setMap(null)
+            }
+          }
+        }
+
+        animate()
+      }
+
+      moveMarker()
+
+      return () => {
+        isMoving = false
+        marker.setMap(null)
+      }
     }
 
     // 初始化地图
@@ -198,7 +287,7 @@ export default function AMapComponent() {
         map.add(marker)
       })
 
-      // 定义路线
+      // 定义路线并添加动态效果
       const routes = [
         { start: '合肥', end: '深圳', color: '#ff4d4f' },
         { start: '郑州', end: '深圳', color: '#ffa940' },
@@ -214,7 +303,7 @@ export default function AMapComponent() {
         { start: '成都', end: '深圳', color: '#69c0ff' }
       ]
 
-      // 添加路线
+      // 添加路线和动态效果
       routes.forEach((route) => {
         const startCity = cities.find(city => city.name === route.start)
         const endCity = cities.find(city => city.name === route.end)
@@ -227,6 +316,7 @@ export default function AMapComponent() {
             [startCity.position, midCity.position, endCity.position] :
             [startCity.position, endCity.position]
 
+          // 添加静态路线
           const polyline = new window.AMap.Polyline({
             path,
             strokeColor: isDark ? 
@@ -241,6 +331,16 @@ export default function AMapComponent() {
           })
 
           map.add(polyline)
+
+          // 添加动态车流效果
+          const addMovingMarker = () => {
+            const isToShenzhen = Math.random() > 0.3 // 70%概率前往深圳
+            const actualPath = isToShenzhen ? path : [...path].reverse()
+            createMovingMarker(map, actualPath, isToShenzhen)
+          }
+
+          // 每隔随机时间（3-8秒）添加一个新的动态标记
+          setInterval(addMovingMarker, Math.random() * 5000 + 3000)
         }
       })
 
