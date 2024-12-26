@@ -33,7 +33,7 @@ export default function AMapComponent() {
         const script = document.createElement('script')
         script.src = `https://webapi.amap.com/maps?v=2.0&key=84d50b8d0e8cbaca8e8be1a750c1c7d9&language=${
           language === 'zh' ? 'zh_cn' : 'en'
-        }&plugin=AMap.Scale,AMap.ToolBar,AMap.ControlBar,AMap.Traffic`
+        }&plugin=AMap.Scale,AMap.ToolBar,AMap.ControlBar,AMap.TileLayer.Traffic`
         script.async = true
         script.onload = () => resolve()
         document.head.appendChild(script)
@@ -229,17 +229,41 @@ export default function AMapComponent() {
       })
 
       // 添加交通流量图层
-      const trafficLayer = new window.AMap.Traffic({
-        zIndex: 10
+      const trafficLayer = new window.AMap.TileLayer.Traffic({
+        zIndex: 10,
+        opacity: 0.6,
+        zooms: [5, 18]
       })
       map.add(trafficLayer)
+
+      // 添加图例
+      const legend = document.createElement('div')
+      legend.className = 'map-legend'
+      legend.innerHTML = `
+        <div class="p-2 bg-white dark:bg-gray-800 rounded shadow-lg text-sm">
+          <div class="mb-2 font-semibold">${language === 'zh' ? '图例说明' : 'Legend'}</div>
+          <div class="flex items-center gap-2 mb-1">
+            <div class="w-4 h-1 bg-[#1890ff] rounded"></div>
+            <span>${language === 'zh' ? '主要高速' : 'Main Highway'}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-4 h-1 opacity-60" style="background: linear-gradient(90deg, #green, #yellow, #red)"></div>
+            <span>${language === 'zh' ? '实时路况' : 'Traffic Status'}</span>
+          </div>
+        </div>
+      `
+      legend.style.position = 'absolute'
+      legend.style.bottom = '20px'
+      legend.style.left = '20px'
+      legend.style.zIndex = '100'
+      mapRef.current.appendChild(legend)
     }
 
     initMap()
   }, [language])
 
   return (
-    <div className="w-full h-full rounded-lg overflow-hidden">
+    <div className="w-full h-full rounded-lg overflow-hidden relative">
       <div ref={mapRef} className="w-full h-full" />
     </div>
   )

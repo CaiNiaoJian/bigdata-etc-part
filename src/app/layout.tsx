@@ -1,17 +1,12 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { AppProvider } from "@/context/AppContext";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import './globals.css'
+import Providers from '@/components/Providers'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "ETC大数据管理平台",
-  description: "高速公路ETC大数据管理与分析平台",
-};
+export const metadata = {
+  title: '大数据管理平台',
+  description: '基于大数据的智能交通管理系统',
+}
 
 export default function RootLayout({
   children,
@@ -19,25 +14,18 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AppProvider>
-            <div className="flex min-h-screen flex-col">
-              <Navbar />
-              <main className="flex-grow">
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </AppProvider>
-        </ThemeProvider>
+    <html lang="zh" className="h-full" suppressHydrationWarning>
+      <body className="h-full font-sans antialiased">
+        <Providers>
+          <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+            <Navbar />
+            <main className="flex-1 container mx-auto px-4 py-8">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
-  );
+  )
 }

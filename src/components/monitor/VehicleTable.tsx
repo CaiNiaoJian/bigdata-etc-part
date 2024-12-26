@@ -1,112 +1,131 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { useApp } from '@/context/AppContext'
 import { translations } from '@/config/translations'
+import { useEffect, useState } from 'react'
 
-interface VehicleRecord {
+interface VehicleInfo {
   id: number
-  plate: string
-  type: string
+  plateNumber: string
+  type: '小型车' | '中型车' | '大型车' | '特大型车' | '客车' | '货车'
   entryTime: string
   exitTime: string
-  entryStation: string
-  exitStation: string
-  notes: string
+}
+
+// 生成随机车牌号
+const generatePlateNumber = () => {
+  const provinces = ['粤', '京', '沪', '浙', '苏', '鄂', '湘', '闽']
+  const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
+  const numbers = '0123456789'
+  
+  const province = provinces[Math.floor(Math.random() * provinces.length)]
+  const letter = letters[Math.floor(Math.random() * letters.length)]
+  const number = Array(5).fill(0).map(() => numbers[Math.floor(Math.random() * numbers.length)]).join('')
+  
+  return `${province}${letter}${number}`
+}
+
+// 生成随机时间
+const generateTime = (baseTime: Date, rangeInMinutes: number) => {
+  const randomMinutes = Math.floor(Math.random() * rangeInMinutes)
+  const time = new Date(baseTime.getTime() - randomMinutes * 60000)
+  return time.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  })
+}
+
+// 生成模拟数据池
+const generateMockDataPool = (count: number): VehicleInfo[] => {
+  const vehicleTypes = ['小型车', '中型车', '大型车', '特大型车', '客车', '货车'] as const
+  const now = new Date()
+  
+  return Array(count).fill(0).map((_, index) => {
+    const entryTime = generateTime(now, 120) // 在过去2小时内的随机时间
+    const exitTime = generateTime(new Date(now.getTime() + 3600000), 60) // 在未来1小时内的随机时间
+    
+    return {
+      id: index + 1,
+      plateNumber: generatePlateNumber(),
+      type: vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)],
+      entryTime,
+      exitTime
+    }
+  })
 }
 
 export default function VehicleTable() {
   const { language } = useApp()
   const t = translations[language as keyof typeof translations].monitor.table
-  const [records, setRecords] = useState<VehicleRecord[]>([])
-
+  const [dataPool] = useState(() => generateMockDataPool(100)) // 生成100条数据的数据池
+  const [displayData, setDisplayData] = useState<VehicleInfo[]>([])
+  
   useEffect(() => {
-    // 生成模拟数据
-    const generateMockData = () => {
-      const stations = ['站点A', 'Station A', '站点B', 'Station B', '站点C', 'Station C']
-      const plates = ['京A12345', '沪B67890', '粤C13579', '津D24680']
-      const types = ['一型车', 'Type 1', '二型车', 'Type 2', '三型车', 'Type 3']
-      
-      return Array.from({ length: 10 }, (_, index) => ({
-        id: index + 1,
-        plate: plates[Math.floor(Math.random() * plates.length)],
-        type: language === 'zh' 
-          ? types[Math.floor(Math.random() * types.length)].replace(/Type \d/, match => 
-              match.replace('Type', '').trim() + '型车')
-          : types[Math.floor(Math.random() * types.length)].replace(/[一二三]型车/, match =>
-              'Type ' + '一二三'.indexOf(match[0]) + 1),
-        entryTime: new Date(Date.now() - Math.random() * 86400000).toLocaleString(
-          language === 'zh' ? 'zh-CN' : 'en-US'
-        ),
-        exitTime: new Date(Date.now() - Math.random() * 43200000).toLocaleString(
-          language === 'zh' ? 'zh-CN' : 'en-US'
-        ),
-        entryStation: language === 'zh'
-          ? stations[Math.floor(Math.random() * stations.length)].replace(/Station/, '站点')
-          : stations[Math.floor(Math.random() * stations.length)].replace(/站点/, 'Station'),
-        exitStation: language === 'zh'
-          ? stations[Math.floor(Math.random() * stations.length)].replace(/Station/, '站点')
-          : stations[Math.floor(Math.random() * stations.length)].replace(/站点/, 'Station'),
-        notes: language === 'zh' ? '正常' : 'Normal'
-      }))
+    // 更新显示数据的函数
+    const updateDisplayData = () => {
+      const startIndex = Math.floor(Math.random() * (dataPool.length - 8))
+      setDisplayData(dataPool.slice(startIndex, startIndex + 8))
     }
-
-    setRecords(generateMockData())
-
-    // 定时更新数据
-    const timer = setInterval(() => {
-      setRecords(generateMockData())
-    }, 10000)
-
-    return () => clearInterval(timer)
-  }, [language])
+    
+    // 初始更新
+    updateDisplayData()
+    
+    // 设置30秒定时更新
+    const interval = setInterval(updateDisplayData, 30000)
+    
+    return () => clearInterval(interval)
+  }, [dataPool])
 
   return (
-    <div className="w-full overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead className="bg-gray-50 dark:bg-gray-800">
-          <tr>
-            {Object.values(t.columns).map((column, index) => (
-              <th
-                key={index}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
-              >
-                {column}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-          {records.map((record) => (
-            <tr key={record.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                {record.id}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
-                {record.plate}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                {record.type}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                {record.entryTime}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                {record.exitTime}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                {record.entryStation}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                {record.exitStation}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                {record.notes}
-              </td>
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            {t.title}
+          </h2>
+        </div>
+        <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center space-x-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span>实时数据</span>
+        </div>
+      </div>
+      
+      <div className="overflow-x-auto">
+        <table className="min-w-full">
+          <thead>
+            <tr className="border-b border-gray-200 dark:border-gray-700">
+              <th className="py-3 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white">序号</th>
+              <th className="py-3 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white">车牌号</th>
+              <th className="py-3 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white">车型</th>
+              <th className="py-3 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white">入站时间</th>
+              <th className="py-3 px-4 text-left text-sm font-semibold text-gray-900 dark:text-white">出站时间</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {displayData.map((vehicle, index) => (
+              <tr
+                key={vehicle.id}
+                className={`
+                  border-b border-gray-100 dark:border-gray-700 last:border-0
+                  ${index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'}
+                `}
+              >
+                <td className="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">{index + 1}</td>
+                <td className="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">{vehicle.plateNumber}</td>
+                <td className="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">{vehicle.type}</td>
+                <td className="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">{vehicle.entryTime}</td>
+                <td className="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">{vehicle.exitTime}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 } 

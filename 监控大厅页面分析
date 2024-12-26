@@ -1,0 +1,13 @@
+1. 主要组件构成:
+- AMapComponent: 高德地图组件集成
+- TrafficFlow: 交通流量分析
+- VehicleDistribution: 车辆分布统计
+- AlertPanel: 告警面板
+- HeatMap: 热力图展示
+- SankeyChart: 桑基图数据流向
+
+2. 功能模块:
+- 实时交通监控
+- 数据可视化展示
+- 告警信息处理
+- 车流量分析 

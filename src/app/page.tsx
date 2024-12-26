@@ -9,17 +9,17 @@ export default function Home() {
   const t = translations[language as keyof typeof translations]
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col space-y-20">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] dark:[mask-image:linear-gradient(180deg,rgba(255,255,255,0.1),rgba(255,255,255,0))]"></div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="relative text-center z-10 px-4 bg-white/30 dark:bg-gray-900/30 backdrop-blur-sm rounded-xl p-8"
+          className="relative z-10 px-6 py-12 sm:px-12 sm:py-16 glass-card max-w-4xl mx-auto text-center"
         >
-          <h1 className="text-4xl md:text-6xl font-bold gradient-text mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold gradient-text mb-8">
             {t.hero.title}
           </h1>
           <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
@@ -53,9 +53,9 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}
-                className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 text-center"
+                className="glass-card p-8 text-center hover:scale-105 transition-transform duration-300"
               >
-                <div className="text-4xl mb-4">{feature.icon}</div>
+                <div className="text-5xl mb-6">{feature.icon}</div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                   {feature.title}
                 </h3>
@@ -76,7 +76,7 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.5 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-center"
+                className="glass-card p-6 text-center hover:scale-105 transition-transform duration-300"
               >
                 <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">
                   {stat.value}
@@ -95,18 +95,14 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
+            className="glass-card p-12 max-w-3xl mx-auto"
           >
             <h2 className="text-3xl md:text-4xl font-bold gradient-text mb-8">
               {t.cta.title}
             </h2>
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block gradient-bg text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
-            >
+            <button className="btn-primary text-lg px-8 py-4">
               {t.cta.button}
-            </a>
+            </button>
           </motion.div>
         </div>
       </section>
@@ -128,7 +124,7 @@ const features = [
   {
     icon: '📱',
     title: '开放平台',
-    description: '提供完整的API接口和开发文档，支持二次开发和功���扩展。',
+    description: '提供完整的API接口和开发文档，支持二次开发和功能扩展。',
   },
 ]
 

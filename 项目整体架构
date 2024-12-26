@@ -1,0 +1,13 @@
+1. 技术栈:
+- Next.js (React框架)
+- TypeScript
+- Tailwind CSS (样式框架)
+- 高德地图集成
+- 数据可视化组件
+
+2. 项目结构:
+src/
+├── app/                 # Next.js 13+ App Router
+├── components/         # 可复用组件
+├── context/           # 全局状态管理
+└── public/            # 静态资源 

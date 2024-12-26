@@ -1,126 +1,234 @@
 export const translations = {
-  zh: {
+  'zh-CN': {
     nav: {
-      intro: '介绍',
+      intro: '首页',
       monitor: '监控大厅',
       query: '交互查询',
-      reports: '分析报告',
-      about: '关于我们',
+      reports: '报表分析',
+      about: '关于我们'
     },
     hero: {
-      title: 'ETC大数据管理平台',
-      subtitle: '由充满激情的技术团队打造的智能化高速公路收费解决方案',
+      title: '高速公路车辆监控系统',
+      subtitle: '实时监控、智能分析、高效管理'
     },
     features: {
-      title: '创新的技术体验',
-      subtitle: '专注于打造高效、可靠的ETC数据管理解决方案',
+      title: '核心功能',
+      subtitle: '为您提供全方位的车辆监控和管理解决方案'
     },
     cta: {
-      title: '加入我们的开源社区',
-      button: '开始贡献',
+      title: '开始使用',
+      button: '立即体验'
     },
     monitor: {
-      title: 'ETC监控大厅',
-      vehicleTypes: {
-        title: '车型分布',
-        type1: '一型车',
-        type2: '二型车',
-        type3: '三型车',
-        type4: '四型车',
-        type5: '五型车',
-        type6: '六型车',
+      title: '监控大厅',
+      subtitle: '实时监控数据',
+      vehicleCount: '车辆总数',
+      todayFlow: '今日流量',
+      alertCount: '预警数量',
+      map: {
+        title: '车辆分布地图'
       },
-      trafficFlow: {
-        title: '车流量统计',
-        hourly: '小时',
-        daily: '天',
-        weekly: '周',
-        monthly: '月',
-        yearly: '年',
+      distribution: {
+        title: '车型分布',
+        vehicleType: '车型',
+        count: '数量'
+      },
+      province: {
+        title: '省份车辆分布',
+        province: '省份',
+        count: '数量'
+      },
+      flow: {
+        title: '车流量趋势',
+        time: '时间',
+        count: '数量'
       },
       table: {
-        title: '车辆出入关口情况',
-        columns: {
-          index: '序号',
-          plate: '车牌号',
-          type: '车型',
-          entryTime: '入站时间',
-          exitTime: '出站时间',
-          entryStation: '入口收费站',
-          exitStation: '出口收费站',
-          notes: '备注',
-        },
+        title: '车辆信息',
+        plateNumber: '车牌号',
+        vehicleType: '车型',
+        entryTime: '入站时间',
+        exitTime: '出站时间',
+        entryStation: '入口收费站',
+        exitStation: '出口收费站',
+        notes: '备注'
       },
-      alerts: {
+      alert: {
         title: '预警信息',
-        level: {
-          high: '高',
-          medium: '中',
-          low: '低',
-        },
+        time: '时间',
+        type: '类型',
+        content: '内容',
+        status: '状态'
       },
+      trafficFlow: {
+        title: '交通流量',
+        time: '时间',
+        count: '数量'
+      }
     },
+    query: {
+      page: {
+        title: '交互查询',
+        queryBuilder: '条件查询',
+        sqlEditor: 'SQL查询',
+        queryResults: '查询结果',
+        plateNumber: '车牌号',
+        vehicleType: '车型',
+        entryTime: '入站时间',
+        exitTime: '出站时间',
+        entryStation: '入口收费站',
+        exitStation: '出口收费站',
+        notes: '备注',
+        totalCount: '总数',
+        avgTime: '平均时间'
+      },
+      builder: {
+        plateNumber: '车牌号',
+        plateNumberPlaceholder: '请输入车牌号',
+        vehicleType: '车型',
+        timeRange: '时间范围',
+        startDate: '开始时间',
+        endDate: '结束时间',
+        entryStation: '入口收费站',
+        exitStation: '出口收费站',
+        notes: '备注',
+        all: '全部',
+        smallVehicle: '小型车',
+        mediumVehicle: '中型车',
+        largeVehicle: '大型车',
+        normal: '正常',
+        timeout: '超时',
+        unpaid: '未付费',
+        reset: '重置',
+        search: '查询'
+      },
+      sqlEditor: {
+        execute: '执行查询'
+      },
+      resultTable: {
+        noData: '暂无数据'
+      }
+    },
+    footer: {
+      company: '高速公路车辆监控系统',
+      description: '提供实时监控、数据分析、智能预警等功能，助力高速公路智能化管理。',
+      copyright: '保留所有权利'
+    }
   },
-  en: {
+  'en-US': {
     nav: {
-      intro: 'Introduction',
+      intro: 'Home',
       monitor: 'Monitor',
       query: 'Query',
       reports: 'Reports',
-      about: 'About',
+      about: 'About'
     },
     hero: {
-      title: 'ETC Big Data Platform',
-      subtitle: 'Smart highway toll solution built by a passionate tech team',
+      title: 'Highway Vehicle Monitoring System',
+      subtitle: 'Real-time Monitoring, Intelligent Analysis, Efficient Management'
     },
     features: {
-      title: 'Innovative Tech Experience',
-      subtitle: 'Focus on building efficient and reliable ETC data management solutions',
+      title: 'Core Features',
+      subtitle: 'Providing comprehensive vehicle monitoring and management solutions'
     },
     cta: {
-      title: 'Join Our Open Source Community',
-      button: 'Start Contributing',
+      title: 'Get Started',
+      button: 'Try Now'
     },
     monitor: {
-      title: 'ETC Monitoring Center',
-      vehicleTypes: {
-        title: 'Vehicle Distribution',
-        type1: 'Type 1',
-        type2: 'Type 2',
-        type3: 'Type 3',
-        type4: 'Type 4',
-        type5: 'Type 5',
-        type6: 'Type 6',
+      title: 'Monitor Hall',
+      subtitle: 'Real-time Monitoring Data',
+      vehicleCount: 'Total Vehicles',
+      todayFlow: 'Today\'s Flow',
+      alertCount: 'Alert Count',
+      map: {
+        title: 'Vehicle Distribution Map'
       },
-      trafficFlow: {
-        title: 'Traffic Flow Statistics',
-        hourly: 'Hourly',
-        daily: 'Daily',
-        weekly: 'Weekly',
-        monthly: 'Monthly',
-        yearly: 'Yearly',
+      distribution: {
+        title: 'Vehicle Type Distribution',
+        vehicleType: 'Type',
+        count: 'Count'
+      },
+      province: {
+        title: 'Provincial Vehicle Distribution',
+        province: 'Province',
+        count: 'Count'
+      },
+      flow: {
+        title: 'Traffic Flow Trend',
+        time: 'Time',
+        count: 'Count'
       },
       table: {
-        title: 'Vehicle Entry/Exit Information',
-        columns: {
-          index: 'No.',
-          plate: 'Plate',
-          type: 'Type',
-          entryTime: 'Entry Time',
-          exitTime: 'Exit Time',
-          entryStation: 'Entry Station',
-          exitStation: 'Exit Station',
-          notes: 'Notes',
-        },
+        title: 'Vehicle Information',
+        plateNumber: 'Plate No.',
+        vehicleType: 'Type',
+        entryTime: 'Entry Time',
+        exitTime: 'Exit Time',
+        entryStation: 'Entry Station',
+        exitStation: 'Exit Station',
+        notes: 'Notes'
       },
-      alerts: {
+      alert: {
         title: 'Alert Information',
-        level: {
-          high: 'High',
-          medium: 'Medium',
-          low: 'Low',
-        },
+        time: 'Time',
+        type: 'Type',
+        content: 'Content',
+        status: 'Status'
       },
+      trafficFlow: {
+        title: 'Traffic Flow',
+        time: 'Time',
+        count: 'Count'
+      }
     },
-  },
+    query: {
+      page: {
+        title: 'Interactive Query',
+        queryBuilder: 'Condition Query',
+        sqlEditor: 'SQL Query',
+        queryResults: 'Query Results',
+        plateNumber: 'Plate Number',
+        vehicleType: 'Vehicle Type',
+        entryTime: 'Entry Time',
+        exitTime: 'Exit Time',
+        entryStation: 'Entry Station',
+        exitStation: 'Exit Station',
+        notes: 'Notes',
+        totalCount: 'Total Count',
+        avgTime: 'Average Time'
+      },
+      builder: {
+        plateNumber: 'Plate Number',
+        plateNumberPlaceholder: 'Enter plate number',
+        vehicleType: 'Vehicle Type',
+        timeRange: 'Time Range',
+        startDate: 'Start Time',
+        endDate: 'End Time',
+        entryStation: 'Entry Station',
+        exitStation: 'Exit Station',
+        notes: 'Notes',
+        all: 'All',
+        smallVehicle: 'Small Vehicle',
+        mediumVehicle: 'Medium Vehicle',
+        largeVehicle: 'Large Vehicle',
+        normal: 'Normal',
+        timeout: 'Timeout',
+        unpaid: 'Unpaid',
+        reset: 'Reset',
+        search: 'Search'
+      },
+      sqlEditor: {
+        execute: 'Execute Query'
+      },
+      resultTable: {
+        noData: 'No data available'
+      }
+    },
+    footer: {
+      company: 'Highway Vehicle Monitoring System',
+      description: 'Providing real-time monitoring, data analysis, and intelligent alerts to facilitate smart highway management.',
+      copyright: 'All rights reserved'
+    }
+  }
 } 

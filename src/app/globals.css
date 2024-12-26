@@ -20,179 +20,125 @@
   --accent-color: 244, 114, 182;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-    135deg,
-    rgb(var(--background-start-rgb)),
-    rgb(var(--background-end-rgb))
-  );
-  min-height: 100vh;
-  transition: all 0.3s ease-in-out;
-}
+@layer base {
+  body {
+    @apply text-gray-900 dark:text-gray-100;
+    @apply bg-gray-50 dark:bg-gray-900;
+    @apply min-h-screen;
+    @apply transition-colors duration-300;
+  }
 
-/* 主题色应用 */
-.text-primary {
-  color: rgb(var(--primary-color));
-}
+  h1 {
+    @apply text-4xl font-bold;
+  }
 
-.bg-primary {
-  background-color: rgb(var(--primary-color));
-}
+  h2 {
+    @apply text-3xl font-semibold;
+  }
 
-.hover-primary:hover {
-  color: rgb(var(--primary-color));
-}
+  h3 {
+    @apply text-2xl font-semibold;
+  }
 
-/* 渐变效果 */
-.gradient-text {
-  background: linear-gradient(
-    45deg,
-    rgb(var(--primary-color)),
-    rgb(var(--accent-color))
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+  h4 {
+    @apply text-xl font-semibold;
+  }
 
-.gradient-bg {
-  background: linear-gradient(
-    45deg,
-    rgb(var(--primary-color)),
-    rgb(var(--secondary-color))
-  );
-  position: relative;
-  overflow: hidden;
-}
-
-.gradient-bg::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 200%;
-  height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 30%,
-    transparent 60%
-  );
-  transform: translateX(-100%);
-  animation: shine 3s infinite;
-}
-
-@keyframes shine {
-  to {
-    transform: translateX(50%);
+  p {
+    @apply text-gray-600 dark:text-gray-300;
   }
 }
 
-/* 夜间模式优化 */
-.dark body {
-  background: linear-gradient(
-    135deg,
-    rgb(var(--background-start-rgb)),
-    rgb(var(--background-end-rgb))
-  );
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply transition-colors duration-200;
+  }
+
+  .btn-primary {
+    @apply btn;
+    @apply text-white bg-primary-600 hover:bg-primary-700;
+    @apply focus:ring-primary-500;
+  }
+
+  .btn-secondary {
+    @apply btn;
+    @apply text-white bg-secondary-600 hover:bg-secondary-700;
+    @apply focus:ring-secondary-500;
+  }
+
+  .btn-outline {
+    @apply btn;
+    @apply border-gray-300 dark:border-gray-600;
+    @apply text-gray-700 dark:text-gray-300;
+    @apply hover:bg-gray-50 dark:hover:bg-gray-800;
+  }
+
+  .card {
+    @apply bg-white dark:bg-gray-800;
+    @apply rounded-lg shadow-soft-md;
+    @apply transition-all duration-300;
+  }
+
+  .input {
+    @apply block w-full px-3 py-2 border border-gray-300 dark:border-gray-600;
+    @apply rounded-md shadow-sm;
+    @apply focus:ring-primary-500 focus:border-primary-500;
+    @apply dark:bg-gray-700 dark:text-white;
+    @apply placeholder-gray-400 dark:placeholder-gray-500;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
+    @apply mb-1;
+  }
 }
 
-.dark .bg-white\/30 {
-  background-color: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(8px);
-}
+@layer utilities {
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary-500 to-secondary-500;
+  }
 
-.dark .bg-gray-900\/30 {
-  background-color: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(8px);
-}
+  .gradient-bg {
+    @apply bg-gradient-to-r from-primary-500 to-secondary-500;
+  }
 
-.dark .bg-white {
-  background-color: rgb(15, 23, 42) !important;
-}
+  .glass {
+    @apply bg-white/30 dark:bg-gray-900/30;
+    @apply backdrop-blur-md;
+    @apply border border-white/20 dark:border-gray-700/20;
+  }
 
-.dark .bg-white\/75 {
-  background-color: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(12px);
-}
-
-.dark .bg-gray-900\/75 {
-  background-color: rgba(15, 23, 42, 0.95);
-  backdrop-filter: blur(12px);
-}
-
-.dark .text-gray-700 {
-  color: rgb(229, 231, 235);
-}
-
-.dark .text-gray-900 {
-  color: rgb(243, 244, 246);
-}
-
-.dark .bg-gray-50 {
-  background-color: rgb(15, 23, 42);
-}
-
-.dark .bg-gray-100 {
-  background-color: rgb(23, 31, 50);
-}
-
-.dark .border-gray-200 {
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-/* 平滑滚动 */
-html {
-  scroll-behavior: smooth;
+  .glass-card {
+    @apply glass;
+    @apply rounded-xl;
+    @apply shadow-soft-md;
+  }
 }
 
 /* 自定义滚动条 */
 ::-webkit-scrollbar {
-  width: 8px;
+  @apply w-2;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(var(--primary-color), 0.3);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(var(--primary-color), 0.5);
+  @apply bg-gray-300 dark:bg-gray-600;
+  @apply rounded-full;
+  @apply hover:bg-gray-400 dark:hover:bg-gray-500;
 }
 
 /* 文字选中样式 */
 ::selection {
-  background: rgba(var(--primary-color), 0.2);
-  color: inherit;
+  @apply bg-primary-500/20 text-current;
 }
 
-/* 动画过渡 */
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-/* 响应式字体大小 */
-@media (max-width: 640px) {
-  html {
-    font-size: 14px;
-  }
-}
-
-@media (min-width: 641px) and (max-width: 1024px) {
-  html {
-    font-size: 15px;
-  }
-}
-
-@media (min-width: 1025px) {
-  html {
-    font-size: 16px;
-  }
+/* 平滑滚动 */
+html {
+  @apply scroll-smooth;
 }

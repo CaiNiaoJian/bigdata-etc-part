@@ -1,47 +1,46 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { useTheme } from 'next-themes'
 
-type AppContextType = {
+interface AppContextType {
   language: string
   setLanguage: (lang: string) => void
-  toggleLanguage: () => void
+  theme: string
+  setTheme: (theme: string) => void
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
-export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState('zh')
-  const { theme, setTheme } = useTheme()
+interface AppProviderProps {
+  children: React.ReactNode
+}
 
-  // 在组件挂载时从localStorage读取语言设置
+export const AppProvider = ({ children }: AppProviderProps) => {
+  const [language, setLanguage] = useState('zh-CN')
+  const [theme, setTheme] = useState('light')
+  const [mounted, setMounted] = useState(false)
+
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language')
-    if (savedLanguage) {
-      setLanguage(savedLanguage)
-    }
+    setMounted(true)
   }, [])
 
-  // 切换语言并保存到localStorage
-  const toggleLanguage = () => {
-    const newLang = language === 'zh' ? 'en' : 'zh'
-    setLanguage(newLang)
-    localStorage.setItem('language', newLang)
-    document.documentElement.lang = newLang
+  if (!mounted) {
+    return null
   }
 
   return (
-    <AppContext.Provider value={{ language, setLanguage, toggleLanguage }}>
+    <AppContext.Provider value={{ language, setLanguage, theme, setTheme }}>
       {children}
     </AppContext.Provider>
   )
 }
 
-export function useApp() {
+export const useApp = () => {
   const context = useContext(AppContext)
   if (context === undefined) {
     throw new Error('useApp must be used within an AppProvider')
   }
   return context
-} 
+}
+
+export type { AppProviderProps, AppContextType } 
