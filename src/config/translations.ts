@@ -60,6 +60,32 @@ export const translations = {
         },
       },
     },
+    query: {
+      title: '交通数据查询',
+      description: '查询ETC交通数据记录，支持多条件组合查询',
+      noData: '暂无数据',
+      fields: {
+        XH: '序号',
+        CP: '车牌号',
+        CX: '车型',
+        RKSJ: '入站时间',
+        CKSJ: '出站时间',
+        SFZRKMC: '入口收费站',
+        SFZCKMC: '出口收费站',
+        BZ: '备注'
+      },
+      placeholders: {
+        CP: '请输入车牌号',
+        CX: '请选择车型',
+        SFZRKMC: '请输入入口收费站',
+        SFZCKMC: '请输入出口收费站',
+        BZ: '请输入备注信息'
+      },
+      buttons: {
+        search: '查询',
+        reset: '重置'
+      }
+    }
   },
   en: {
     nav: {
@@ -122,5 +148,31 @@ export const translations = {
         },
       },
     },
+    query: {
+      title: 'Traffic Data Query',
+      description: 'Query ETC traffic records with multiple conditions',
+      noData: 'No data available',
+      fields: {
+        XH: 'No.',
+        CP: 'License Plate',
+        CX: 'Vehicle Type',
+        RKSJ: 'Entry Time',
+        CKSJ: 'Exit Time',
+        SFZRKMC: 'Entry Station',
+        SFZCKMC: 'Exit Station',
+        BZ: 'Remarks'
+      },
+      placeholders: {
+        CP: 'Enter license plate',
+        CX: 'Select vehicle type',
+        SFZRKMC: 'Enter entry station',
+        SFZCKMC: 'Enter exit station',
+        BZ: 'Enter remarks'
+      },
+      buttons: {
+        search: 'Search',
+        reset: 'Reset'
+      }
+    }
   },
 } 

@@ -33,7 +33,7 @@ export default function AMapComponent() {
         const script = document.createElement('script')
         script.src = `https://webapi.amap.com/maps?v=2.0&key=84d50b8d0e8cbaca8e8be1a750c1c7d9&language=${
           language === 'zh' ? 'zh_cn' : 'en'
-        }&plugin=AMap.Scale,AMap.ToolBar,AMap.ControlBar,AMap.Traffic`
+        }&plugin=AMap.Scale,AMap.ToolBar,AMap.ControlBar,AMap.TileLayer.Traffic`
         script.async = true
         script.onload = () => resolve()
         document.head.appendChild(script)
@@ -229,9 +229,11 @@ export default function AMapComponent() {
       })
 
       // 添加交通流量图层
-      const trafficLayer = new window.AMap.Traffic({
-        zIndex: 10
+      const trafficLayer = new window.AMap.TileLayer.Traffic({
+        zIndex: 10,
+        zooms: [3, 20]
       })
+      
       map.add(trafficLayer)
     }
 
