@@ -38,45 +38,57 @@ export default function MonitorPage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pt-16">
       <RealTimeHeader />
-      <div className="container mx-auto p-4 grid grid-cols-12 gap-4">
-        {/* 中央地图 */}
-        <div className="col-span-12 lg:col-span-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[500px]">
-          <AMapComponent />
+      <div className="container mx-auto p-4 space-y-4">
+        {/* 第一行：车型分布 + 地图 + 省份分布 */}
+        <div className="grid grid-cols-12 gap-4">
+          {/* 车型分布 */}
+          <div className="col-span-12 lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[600px]">
+            <VehicleDistribution />
+          </div>
+
+          {/* 中央地图 */}
+          <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[600px]">
+            <AMapComponent />
+          </div>
+
+          {/* 省份分布 */}
+          <div className="col-span-12 lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[600px]">
+            <ProvinceDistribution />
+          </div>
         </div>
 
-        {/* 车型分布 */}
-        <div className="col-span-12 lg:col-span-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[500px]">
-          <VehicleDistribution />
+        {/* 第二行：车流量统计 + 出口流量热力图 */}
+        <div className="grid grid-cols-12 gap-4">
+          {/* 流量展示 */}
+          <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
+            <TrafficFlow />
+          </div>
+
+          {/* 热力图 */}
+          <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
+            <HeatMap />
+          </div>
         </div>
 
-        {/* 省份分布 */}
-        <div className="col-span-12 lg:col-span-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
-          <ProvinceDistribution />
+        {/* 第三行：车辆信息 + 预警信息 */}
+        <div className="grid grid-cols-12 gap-4">
+          {/* 车辆信息表格 */}
+          <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px] overflow-hidden">
+            <VehicleTable />
+          </div>
+
+          {/* 预警信息 */}
+          <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
+            <AlertPanel />
+          </div>
         </div>
 
-        {/* 流量展示 */}
-        <div className="col-span-12 lg:col-span-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
-          <TrafficFlow />
-        </div>
-
-        {/* 热力图 */}
-        <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
-          <HeatMap />
-        </div>
-
-        {/* 车辆信息表格 */}
-        <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px] overflow-hidden">
-          <VehicleTable />
-        </div>
-
-        {/* 预警信息 */}
-        <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
-          <AlertPanel />
-        </div>
-
-        {/* 车流路径流向图 */}
-        <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
-          <SankeyChart />
+        {/* 第四行：广东流路径流向图 */}
+        <div className="grid grid-cols-12 gap-4">
+          {/* 车流路径流向图 */}
+          <div className="col-span-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
+            <SankeyChart />
+          </div>
         </div>
       </div>
     </div>
