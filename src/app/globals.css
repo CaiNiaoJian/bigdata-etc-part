@@ -1,6 +1,8 @@
+/* stylelint-disable */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* stylelint-enable */
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -52,14 +54,10 @@ body {
 
 /* 渐变效果 */
 .gradient-text {
-  background: linear-gradient(
-    45deg,
-    rgb(var(--primary-color)),
-    rgb(var(--accent-color))
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, var(--color-primary), var(--color-primary-light));
 }
 
 .gradient-bg {
@@ -233,7 +231,10 @@ html {
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-light;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(to right, var(--color-primary), var(--color-primary-light));
 }
 
 .bg-primary {
@@ -250,4 +251,88 @@ html {
 
 .hover\:bg-primary-dark:hover {
   background-color: var(--color-primary-dark);
+}
+
+/* 监控大厅动态边框效果 */
+.monitor-panel {
+  position: relative;
+  border: 2px solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(
+    45deg,
+    rgb(236, 72, 153) 0%,
+    rgb(139, 92, 246) 50%,
+    rgb(236, 72, 153) 100%
+  );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  animation: borderRotate 3s ease infinite;
+  border-radius: 0.5rem;
+}
+
+.dark .monitor-panel {
+  border-image-source: linear-gradient(
+    45deg,
+    rgb(59, 130, 246) 0%,
+    rgb(30, 64, 175) 50%,
+    rgb(59, 130, 246) 100%
+  );
+}
+
+@keyframes borderRotate {
+  0% {
+    border-image-source: linear-gradient(
+      0deg,
+      rgb(236, 72, 153) 0%,
+      rgb(139, 92, 246) 50%,
+      rgb(236, 72, 153) 100%
+    );
+  }
+  50% {
+    border-image-source: linear-gradient(
+      180deg,
+      rgb(236, 72, 153) 0%,
+      rgb(139, 92, 246) 50%,
+      rgb(236, 72, 153) 100%
+    );
+  }
+  100% {
+    border-image-source: linear-gradient(
+      360deg,
+      rgb(236, 72, 153) 0%,
+      rgb(139, 92, 246) 50%,
+      rgb(236, 72, 153) 100%
+    );
+  }
+}
+
+.dark .monitor-panel {
+  animation: darkBorderRotate 3s ease infinite;
+}
+
+@keyframes darkBorderRotate {
+  0% {
+    border-image-source: linear-gradient(
+      0deg,
+      rgb(59, 130, 246) 0%,
+      rgb(30, 64, 175) 50%,
+      rgb(59, 130, 246) 100%
+    );
+  }
+  50% {
+    border-image-source: linear-gradient(
+      180deg,
+      rgb(59, 130, 246) 0%,
+      rgb(30, 64, 175) 50%,
+      rgb(59, 130, 246) 100%
+    );
+  }
+  100% {
+    border-image-source: linear-gradient(
+      360deg,
+      rgb(59, 130, 246) 0%,
+      rgb(30, 64, 175) 50%,
+      rgb(59, 130, 246) 100%
+    );
+  }
 }

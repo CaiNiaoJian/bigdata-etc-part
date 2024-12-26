@@ -46,28 +46,28 @@ export default function MonitorPage() {
           {/* 左侧区域 */}
           <div className="col-span-12 lg:col-span-3 space-y-4">
             {/* 交通压力引擎 */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
+            <div className="monitor-panel bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
               <TrafficPressure />
             </div>
             {/* 车型分布 */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
+            <div className="monitor-panel bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
               <VehicleDistribution />
             </div>
           </div>
 
           {/* 中央地图 */}
-          <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[600px]">
+          <div className="monitor-panel col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[600px]">
             <AMapComponent />
           </div>
 
           {/* 右侧区域 */}
           <div className="col-span-12 lg:col-span-3 space-y-4">
             {/* 深圳入/深圳出 */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
+            <div className="monitor-panel bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
               <ShenzhenFlow />
             </div>
             {/* 省份分布 */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
+            <div className="monitor-panel bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
               <ProvinceDistribution />
             </div>
           </div>
@@ -76,12 +76,12 @@ export default function MonitorPage() {
         {/* 第二行：车流量统计 + 出口流量热力图 */}
         <div className="grid grid-cols-12 gap-4">
           {/* 流量展示 */}
-          <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
+          <div className="monitor-panel col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
             <TrafficFlow />
           </div>
 
           {/* 热力图 */}
-          <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
+          <div className="monitor-panel col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
             <HeatMap />
           </div>
         </div>
@@ -89,12 +89,12 @@ export default function MonitorPage() {
         {/* 第三行：车辆信息 + 预警信息 */}
         <div className="grid grid-cols-12 gap-4">
           {/* 车辆信息表格 */}
-          <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px] overflow-hidden">
+          <div className="monitor-panel col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px] overflow-hidden">
             <VehicleTable />
           </div>
 
           {/* 预警信息 */}
-          <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
+          <div className="monitor-panel col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
             <AlertPanel />
           </div>
         </div>
@@ -102,7 +102,7 @@ export default function MonitorPage() {
         {/* 第四行：广东流路径流向图 */}
         <div className="grid grid-cols-12 gap-4">
           {/* 车流路径流向图 */}
-          <div className="col-span-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
+          <div className="monitor-panel col-span-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
             <SankeyChart />
           </div>
         </div>
