@@ -14,6 +14,7 @@ const VehicleDistribution = dynamic(() => import('../../components/monitor/Vehic
 const ProvinceDistribution = dynamic(() => import('../../components/monitor/ProvinceDistribution'), { ssr: false })
 const TrafficFlow = dynamic(() => import('../../components/monitor/TrafficFlow'), { ssr: false })
 const HeatMap = dynamic(() => import('../../components/monitor/HeatMap'), { ssr: false })
+const SankeyChart = dynamic(() => import('../../components/monitor/SankeyChart'), { ssr: false })
 
 export default function MonitorPage() {
   const { language } = useApp()
@@ -69,8 +70,13 @@ export default function MonitorPage() {
         </div>
 
         {/* 预警信息 */}
-        <div className="col-span-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
+        <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
           <AlertPanel />
+        </div>
+
+        {/* 车流路径流向图 */}
+        <div className="col-span-12 lg:col-span-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[400px]">
+          <SankeyChart />
         </div>
       </div>
     </div>
