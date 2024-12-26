@@ -7,6 +7,8 @@ type AppContextType = {
   language: string
   setLanguage: (lang: string) => void
   toggleLanguage: () => void
+  theme?: string
+  setTheme: (theme: string) => void
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
@@ -32,7 +34,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AppContext.Provider value={{ language, setLanguage, toggleLanguage }}>
+    <AppContext.Provider value={{ language, setLanguage, toggleLanguage, theme, setTheme }}>
       {children}
     </AppContext.Provider>
   )

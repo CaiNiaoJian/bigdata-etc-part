@@ -14,7 +14,8 @@ declare global {
 
 export default function AMapComponent() {
   const mapRef = useRef<HTMLDivElement>(null)
-  const { language } = useApp()
+  const { language, theme } = useApp()
+  const isDark = theme === 'dark'
 
   useEffect(() => {
     // 加载高德地图脚本
@@ -50,7 +51,7 @@ export default function AMapComponent() {
         zoom: 5,
         center: [113.264385, 30.129112],
         viewMode: '3D',
-        mapStyle: 'amap://styles/whitesmoke',
+        mapStyle: isDark ? 'amap://styles/dark' : 'amap://styles/normal',
       })
 
       // 添加控件
@@ -112,7 +113,7 @@ export default function AMapComponent() {
       highways.forEach(highway => {
         const polyline = new window.AMap.Polyline({
           path: highway.path,
-          strokeColor: '#1890ff',
+          strokeColor: isDark ? '#177ddc' : '#1890ff',
           strokeWeight: 8,
           strokeOpacity: 0.6,
           showDir: true,
@@ -129,7 +130,7 @@ export default function AMapComponent() {
           position: highway.path[midPoint],
           offset: new window.AMap.Pixel(0, -20),
           style: {
-            'background-color': '#1890ff',
+            'background-color': isDark ? '#177ddc' : '#1890ff',
             'border-width': 0,
             'text-align': 'center',
             'font-size': '12px',
@@ -162,6 +163,20 @@ export default function AMapComponent() {
         { name: '成都', position: [104.065735, 30.659462] }
       ]
 
+      // 自定义标记样式
+      const createMarkerIcon = (isDestination: boolean) => {
+        const color = isDestination ? 
+          (isDark ? '#177ddc' : '#1890ff') : 
+          (isDark ? '#177ddc80' : '#1890ff80')
+        
+        const svg = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="${color}">
+            <path d="M12 0C7.589 0 4 3.589 4 8c0 5.5 8 16 8 16s8-10.5 8-16c0-4.411-3.589-8-8-8zm0 12c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"/>
+          </svg>
+        `
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)
+      }
+
       // 添加城市标记
       cities.forEach((city) => {
         const marker = new window.AMap.Marker({
@@ -172,12 +187,11 @@ export default function AMapComponent() {
             direction: 'top',
           },
           icon: new window.AMap.Icon({
-            size: new window.AMap.Size(40, 40),
-            image: city.isDestination ? 
-              'https://webapi.amap.com/theme/v1.3/markers/n/mark_r.png' : 
-              'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
-            imageSize: new window.AMap.Size(40, 40)
+            size: new window.AMap.Size(24, 24),
+            image: createMarkerIcon(!!city.isDestination),
+            imageSize: new window.AMap.Size(24, 24)
           }),
+          offset: new window.AMap.Pixel(-12, -24),
           zIndex: 2
         })
 
@@ -215,7 +229,9 @@ export default function AMapComponent() {
 
           const polyline = new window.AMap.Polyline({
             path,
-            strokeColor: route.color,
+            strokeColor: isDark ? 
+              route.color.replace(/ff/g, 'cc') : 
+              route.color,
             strokeWeight: 3,
             strokeOpacity: 0.6,
             showDir: true,
@@ -238,7 +254,7 @@ export default function AMapComponent() {
     }
 
     initMap()
-  }, [language])
+  }, [language, theme])
 
   return (
     <div className="w-full h-full rounded-lg overflow-hidden">
