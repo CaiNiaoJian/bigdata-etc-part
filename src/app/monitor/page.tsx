@@ -15,6 +15,8 @@ const ProvinceDistribution = dynamic(() => import('../../components/monitor/Prov
 const TrafficFlow = dynamic(() => import('../../components/monitor/TrafficFlow'), { ssr: false })
 const HeatMap = dynamic(() => import('../../components/monitor/HeatMap'), { ssr: false })
 const SankeyChart = dynamic(() => import('../../components/monitor/SankeyChart'), { ssr: false })
+const TrafficPressure = dynamic(() => import('../../components/monitor/TrafficPressure'), { ssr: false })
+const ShenzhenFlow = dynamic(() => import('../../components/monitor/ShenzhenFlow'), { ssr: false })
 
 export default function MonitorPage() {
   const { language } = useApp()
@@ -39,11 +41,18 @@ export default function MonitorPage() {
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 pt-16">
       <RealTimeHeader />
       <div className="container mx-auto p-4 space-y-4">
-        {/* 第一行：车型分布 + 地图 + 省份分布 */}
+        {/* 第一行：交通压力引擎 + 地图 + 深圳入/深圳出 */}
         <div className="grid grid-cols-12 gap-4">
-          {/* 车型分布 */}
-          <div className="col-span-12 lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[600px]">
-            <VehicleDistribution />
+          {/* 左侧区域 */}
+          <div className="col-span-12 lg:col-span-3 space-y-4">
+            {/* 交通压力引擎 */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
+              <TrafficPressure />
+            </div>
+            {/* 车型分布 */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
+              <VehicleDistribution />
+            </div>
           </div>
 
           {/* 中央地图 */}
@@ -51,9 +60,16 @@ export default function MonitorPage() {
             <AMapComponent />
           </div>
 
-          {/* 省份分布 */}
-          <div className="col-span-12 lg:col-span-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[600px]">
-            <ProvinceDistribution />
+          {/* 右侧区域 */}
+          <div className="col-span-12 lg:col-span-3 space-y-4">
+            {/* 深圳入/深圳出 */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
+              <ShenzhenFlow />
+            </div>
+            {/* 省份分布 */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 h-[300px]">
+              <ProvinceDistribution />
+            </div>
           </div>
         </div>
 
