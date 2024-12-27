@@ -48,12 +48,13 @@ export default function StationFlowForecast() {
   const { language } = useApp()
   const chartRef = useRef<ReactECharts>(null)
   const data = generateForecastData()
+  const isDarkMode = document.documentElement.classList.contains('dark')
 
   const getOption = () => ({
     title: {
       text: language === 'zh' ? '24小时流量预测' : '24-Hour Flow Forecast',
       textStyle: {
-        color: language === 'zh' ? '#1f2937' : '#111827',
+        color: isDarkMode ? '#ffffff' : '#1f2937',
         fontWeight: 'bold'
       }
     },
@@ -74,6 +75,9 @@ export default function StationFlowForecast() {
       formatter: (name: string) => {
         const station = stations.find(s => s.name.zh === name)
         return station ? station.name[language as keyof typeof station.name] : name
+      },
+      textStyle: {
+        color: isDarkMode ? '#ffffff' : '#1f2937'
       }
     },
     grid: {
@@ -85,11 +89,30 @@ export default function StationFlowForecast() {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: data.map(item => item.time)
+      data: data.map(item => item.time),
+      axisLabel: {
+        color: isDarkMode ? '#ffffff' : '#1f2937'
+      },
+      axisLine: {
+        lineStyle: {
+          color: isDarkMode ? '#ffffff' : '#1f2937'
+        }
+      }
     },
     yAxis: {
       type: 'value',
-      name: language === 'zh' ? '车流量 (辆/小时)' : 'Traffic Flow (vehicles/hour)'
+      name: language === 'zh' ? '车流量 (辆/小时)' : 'Traffic Flow (vehicles/hour)',
+      nameTextStyle: {
+        color: isDarkMode ? '#ffffff' : '#1f2937'
+      },
+      axisLabel: {
+        color: isDarkMode ? '#ffffff' : '#1f2937'
+      },
+      axisLine: {
+        lineStyle: {
+          color: isDarkMode ? '#ffffff' : '#1f2937'
+        }
+      }
     },
     series: stations.map(station => ({
       name: station.name.zh,
@@ -109,6 +132,23 @@ export default function StationFlowForecast() {
       chart.setOption(getOption())
     }
   }, [language])
+
+  // 监听主题变化
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark')
+      if (chartRef.current) {
+        chartRef.current.getEchartsInstance().setOption(getOption())
+      }
+    })
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    })
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div className="h-full flex flex-col">

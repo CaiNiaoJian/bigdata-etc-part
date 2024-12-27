@@ -45,12 +45,13 @@ export default function TimeSeriesFlow() {
   const { language } = useApp()
   const chartRef = useRef<ReactECharts>(null)
   const data = generateTimeSeriesData()
+  const isDarkMode = document.documentElement.classList.contains('dark')
 
   const getOption = () => ({
     title: {
       text: language === 'zh' ? '时间序列流量预测' : 'Time Series Flow Prediction',
       textStyle: {
-        color: language === 'zh' ? '#1f2937' : '#111827',
+        color: isDarkMode ? '#ffffff' : '#1f2937',
         fontWeight: 'bold'
       }
     },
@@ -70,8 +71,8 @@ export default function TimeSeriesFlow() {
     },
     legend: {
       data: [
-        { name: 'Actual', textStyle: { color: language === 'zh' ? '#1f2937' : '#111827' } },
-        { name: 'Predicted', textStyle: { color: language === 'zh' ? '#1f2937' : '#111827' } }
+        { name: 'Actual', textStyle: { color: isDarkMode ? '#ffffff' : '#1f2937' } },
+        { name: 'Predicted', textStyle: { color: isDarkMode ? '#ffffff' : '#1f2937' } }
       ],
       formatter: (name: string) => {
         if (language === 'zh') {
@@ -90,18 +91,27 @@ export default function TimeSeriesFlow() {
       type: 'category',
       boundaryGap: false,
       data: data.map(item => item.date),
+      axisLabel: {
+        color: isDarkMode ? '#ffffff' : '#1f2937'
+      },
       axisLine: {
         lineStyle: {
-          color: language === 'zh' ? '#1f2937' : '#111827'
+          color: isDarkMode ? '#ffffff' : '#1f2937'
         }
       }
     },
     yAxis: {
       type: 'value',
       name: language === 'zh' ? '总流量 (辆/天)' : 'Total Flow (vehicles/day)',
+      nameTextStyle: {
+        color: isDarkMode ? '#ffffff' : '#1f2937'
+      },
+      axisLabel: {
+        color: isDarkMode ? '#ffffff' : '#1f2937'
+      },
       axisLine: {
         lineStyle: {
-          color: language === 'zh' ? '#1f2937' : '#111827'
+          color: isDarkMode ? '#ffffff' : '#1f2937'
         }
       }
     },
@@ -141,6 +151,23 @@ export default function TimeSeriesFlow() {
       chart.setOption(getOption())
     }
   }, [language])
+
+  // 监听主题变化
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark')
+      if (chartRef.current) {
+        chartRef.current.getEchartsInstance().setOption(getOption())
+      }
+    })
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    })
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <div className="h-full flex flex-col">
