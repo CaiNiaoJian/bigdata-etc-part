@@ -128,13 +128,13 @@ const features = [
   {
     icon: '📱',
     title: '开放平台',
-    description: '提供完整的API接口和开发文档，支持二次开发和功���扩展。',
+    description: '提供完整的API接口和开发文档，支持二次开发和功能扩展。',
   },
 ]
 
 const stats = [
   { value: '99.9%', label: '系统可用性' },
-  { value: '1000+', label: '服务车道数' },
-  { value: '50万+', label: '日均交易量' },
-  { value: '20+', label: '技术贡献者' },
+  { value: '10000+', label: '服务车道数' },
+  { value: '17万+', label: '日均车流量' },
+  { value: '4+', label: '技术贡献者' },
 ]
