@@ -147,7 +147,7 @@ export default function AboutPage() {
                 {language === 'zh' ? '技术栈' : 'Tech Stack'}
               </h4>
               <div className="flex flex-wrap gap-2">
-                {['Next.js', 'React', 'TypeScript', 'Kafka', 'Flink', 'HBase'].map((tech) => (
+                {['Next.js', 'React', 'TypeScript', 'Kafka', 'Flink', 'HBase', 'Docker', 'Python'].map((tech) => (
                   <span
                     key={tech}
                     className="px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 rounded-full text-gray-700 dark:text-gray-300"
