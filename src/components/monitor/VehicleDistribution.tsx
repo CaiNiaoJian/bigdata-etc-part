@@ -112,14 +112,23 @@ export default function VehicleDistribution() {
 
     // 每3秒更新数据
     const timer = setInterval(() => {
-      setVehicleData(prev => ({
-        type1: prev.type1 + Math.floor(Math.random() * 61 + 20), // 20-80辆
-        type2: prev.type2 + (Math.random() < 0.3 ? 1 : 0), // 30%概率+1
-        type3: prev.type3 + (Math.random() < 0.2 ? 1 : 0), // 20%概率+1
-        type4: prev.type4 + Math.floor(Math.random() * 3 + 3), // 3-5辆
-        type5: prev.type5 + (Math.random() < 0.4 ? 1 : 0), // 40%概率+1
-        type6: prev.type6 + Math.floor(Math.random() * 3 + 3)  // 3-5辆
-      }))
+      setVehicleData(prev => {
+        const newData = {
+          type1: prev.type1 + Math.floor(Math.random() * 61 + 15), // 20-80辆
+          type2: prev.type2 + (Math.random() < 0.35 ? 1 : 0), // 30%概率+1
+          type3: prev.type3 + (Math.random() < 0.25 ? 1 : 0), // 20%概率+1
+          type4: prev.type4 + Math.floor(Math.random() * 3 + 5), // 3-5辆
+          type5: prev.type5 + (Math.random() < 0.4 ? 1 : 0), // 40%概率+1
+          type6: prev.type6 + Math.floor(Math.random() * 3 + 5)  // 3-5辆
+        }
+
+        // 发送数据更新事件
+        window.dispatchEvent(
+          new CustomEvent('vehicleDataUpdate', { detail: newData })
+        )
+
+        return newData
+      })
     }, 3000)
 
     const handleResize = () => {
