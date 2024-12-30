@@ -6,9 +6,9 @@ import { useApp } from '@/context/AppContext'
 import { translations } from '@/config/translations'
 
 const stations = [
-  { id: 1, name: '深圳湾口岸' },
-  { id: 2, name: '皇岗口岸' },
-  { id: 3, name: '文锦渡口岸' }
+  { id: 1, name: '广东水朗D站' },
+  { id: 2, name: '广东罗田主线站' },
+  { id: 3, name: '松山湖南' }
 ]
 
 export default function TrafficPressure() {
@@ -20,7 +20,7 @@ export default function TrafficPressure() {
   // 模拟实时数据更新
   useEffect(() => {
     const timer = setInterval(() => {
-      setPressure(Math.floor(Math.random() * 60 + 30)) // 30-90范围内的随机数
+      setPressure(Math.floor(Math.random() * 65 + 30)) // 30-90范围内的随机数
     }, 3000)
     return () => clearInterval(timer)
   }, [])
