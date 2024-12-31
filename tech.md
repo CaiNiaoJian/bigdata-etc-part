@@ -901,51 +901,34 @@ interface TimeSeriesResponse {
 ```typescript
 // GET /api/query/vehicles
 interface VehicleQueryRequest {
-  plateNumber?: string
-  type?: string
-  timeRange?: [string, string]
-  stations?: number[]
+  CP?: string              // 车牌号
+  CX?: string              // 车型
+  timeRange?: {            // 时间范围
+    start: Date
+    end: Date
+  }
+  SFZRKMC?: string        // 入口收费站
+  SFZCKMC?: string        // 出口收费站
   page: number
   pageSize: number
   sort?: {
-    field: string
+    field: keyof VehicleRecord
     order: 'asc' | 'desc'
   }
 }
 
 interface VehicleQueryResponse {
   total: number
-  vehicles: {
-    id: number
-    plateNumber: string
-    type: string
-    entryTime: string
-    exitTime: string
-    entryStation: string
-    exitStation: string
-    fee: number
-    path: {
-      stationId: number
-      name: string
-      timestamp: string
-    }[]
-  }[]
-  statistics: {
-    totalDistance: number
-    totalFee: number
-    averageSpeed: number
+  records: VehicleRecord[]
+  summary: {
+    totalVehicles: number
+    currentInStation: number
+    averageStayTime: number
   }
 }
 
-// GET /api/query/vehicles/{id}/details
-interface VehicleDetailResponse {
-  basicInfo: {
-    plateNumber: string
-    type: string
-    color: string
-    axles: number
-    weight: number
-  }
+// GET /api/query/vehicles/{XH}
+interface VehicleDetailResponse extends VehicleRecord {
   transactions: {
     id: string
     timestamp: string
@@ -953,14 +936,6 @@ interface VehicleDetailResponse {
     type: string
     amount: number
     status: string
-  }[]
-  violations: {
-    id: string
-    timestamp: string
-    location: string
-    type: string
-    status: string
-    fine: number
   }[]
 }
 ```
@@ -994,32 +969,6 @@ interface StationQueryResponse {
       operationalHours: number
     }
   }[]
-}
-
-// GET /api/query/stations/{id}/statistics
-interface StationStatisticsResponse {
-  hourly: {
-    hour: number
-    flow: number
-    occupancy: number
-    revenue: number
-  }[]
-  daily: {
-    date: string
-    totalFlow: number
-    peakHours: number[]
-    revenue: number
-  }[]
-  vehicleTypes: {
-    type: string
-    count: number
-    percentage: number
-  }[]
-  performance: {
-    uptime: number
-    responseTime: number
-    errorRate: number
-  }
 }
 ```
 
