@@ -9,6 +9,7 @@
 6. [状态管理](#状态管理)
 7. [性能优化](#性能优化)
 8. [安全性考虑](#安全性考虑)
+9. [JSON数据交互设计](#JSON数据交互设计)
 
 ## 整体架构
 
@@ -423,4 +424,221 @@ interface AccessControl {
     retention: number
   }
 }
-``` 
+```
+
+## JSON数据交互设计
+
+### 1. 数据模型定义
+```typescript
+// 基础数据模型
+interface VehicleRecord {
+  XH: number          // 序号
+  CP: string          // 车牌号
+  CX: string          // 车型
+  RKSJ: string        // 入站时间
+  CKSJ: string        // 出站时间
+  SFZRKMC: string     // 入口收费站
+  SFZCKMC: string     // 出口收费站
+  BZ: string          // 备注
+}
+
+// 数据传输对象
+interface VehicleDTO {
+  records: VehicleRecord[]
+  total: number
+  timestamp: string
+}
+```
+
+### 2. API接口JSON规范
+```typescript
+// 查询请求格式
+interface VehicleQueryRequest {
+  filters: {
+    CP?: string              // 车牌号模糊匹配
+    CX?: string[]           // 车型列表
+    timeRange?: {
+      start: string         // 入站时间范围开始
+      end: string          // 入站时间范围结束
+    }
+    SFZRKMC?: string[]     // 入口收费站列表
+    SFZCKMC?: string[]     // 出口收费站列表
+  }
+  pagination: {
+    page: number
+    pageSize: number
+  }
+  sort: {
+    field: keyof VehicleRecord
+    order: 'asc' | 'desc'
+  }
+}
+
+// 查询响应格式
+interface VehicleQueryResponse {
+  code: number               // 状态码
+  message: string           // 状态信息
+  data: {
+    records: VehicleRecord[]
+    total: number
+    summary: {
+      totalVehicles: number
+      avgStayTime: number
+      stationStats: {
+        [stationName: string]: {
+          inFlow: number
+          outFlow: number
+        }
+      }
+    }
+  }
+  timestamp: string
+}
+```
+
+### 3. WebSocket实时数据格式
+```typescript
+// 实时数据推送
+interface WSVehicleUpdate {
+  type: 'VEHICLE_UPDATE'
+  data: {
+    newRecords: VehicleRecord[]
+    deletedIds: number[]
+    updatedRecords: Partial<VehicleRecord>[]
+  }
+  timestamp: string
+}
+
+// 统计数据推送
+interface WSStatisticsUpdate {
+  type: 'STATISTICS_UPDATE'
+  data: {
+    totalVehicles: number
+    activeVehicles: number
+    stationStatus: {
+      [stationName: string]: {
+        currentLoad: number
+        trend: 'up' | 'down' | 'stable'
+      }
+    }
+  }
+  timestamp: string
+}
+```
+
+### 4. 数据转换与验证
+```typescript
+// 数据验证规则
+interface ValidationRules {
+  CP: {
+    pattern: /^[\u4e00-\u9fa5][A-Z0-9]{6}$/
+    message: '车牌号格式不正确'
+  }
+  CX: {
+    enum: ['小型车', '中型车', '大型车', '特大型车']
+    message: '无效的车型'
+  }
+  RKSJ: {
+    type: 'datetime'
+    format: 'YYYY-MM-DD HH:mm:ss'
+    message: '入站时间格式不正确'
+  }
+  CKSJ: {
+    type: 'datetime'
+    format: 'YYYY-MM-DD HH:mm:ss'
+    nullable: true
+    message: '出站时间格式不正确'
+  }
+}
+
+// 数据转换工具
+interface DataTransformUtils {
+  toJSON: (record: VehicleRecord) => string
+  fromJSON: (json: string) => VehicleRecord
+  validate: (record: Partial<VehicleRecord>) => ValidationError[]
+  format: {
+    datetime: (value: string, format?: string) => string
+    plateNumber: (value: string) => string
+    stationName: (value: string) => string
+  }
+}
+```
+
+### 5. 缓存策略
+```typescript
+interface CacheStrategy {
+  // 本地缓存配置
+  localStorage: {
+    key: string
+    maxAge: number
+    maxItems: number
+    serializer: {
+      serialize: (data: VehicleRecord[]) => string
+      deserialize: (data: string) => VehicleRecord[]
+    }
+  }
+  
+  // API响应缓存
+  apiCache: {
+    enabled: boolean
+    duration: number
+    keyGenerator: (request: VehicleQueryRequest) => string
+    storage: 'memory' | 'localStorage'
+  }
+}
+```
+
+### 6. 数据聚合与统计
+```typescript
+interface DataAggregation {
+  // 实时统计
+  realtime: {
+    interval: number
+    metrics: {
+      totalFlow: number
+      stationFlow: Record<string, number>
+      vehicleTypes: Record<string, number>
+    }
+  }
+  
+  // 历史统计
+  historical: {
+    aggregationLevels: ('hour' | 'day' | 'week' | 'month')[]
+    metrics: {
+      flowTrend: Array<{
+        timestamp: string
+        value: number
+      }>
+      stationLoad: Record<string, number>
+      peakHours: Array<{
+        hour: number
+        count: number
+      }>
+    }
+  }
+}
+```
+
+### 7. 错误处理
+```typescript
+interface ErrorHandling {
+  // 错误码定义
+  errorCodes: {
+    INVALID_DATA: 4001
+    VALIDATION_ERROR: 4002
+    DUPLICATE_ENTRY: 4003
+    NOT_FOUND: 4004
+    SERVER_ERROR: 5001
+  }
+  
+  // 错误响应格式
+  errorResponse: {
+    code: number
+    message: string
+    details?: {
+      field: string
+      error: string
+    }[]
+    timestamp: string
+  }
+} 
