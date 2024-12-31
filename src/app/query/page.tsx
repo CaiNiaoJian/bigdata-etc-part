@@ -48,20 +48,23 @@ export default function QueryPage() {
   }, [])
 
   const handleSearch = async (formData: Partial<QueryData>) => {
+    console.log('Search form data:', formData)
     // 过滤数据
     const filteredData = allData.filter(item => {
       return Object.entries(formData).every(([key, value]) => {
         if (!value) return true // 空值不过滤
         const itemValue = item[key as keyof QueryData]
+        console.log(`Comparing ${key}:`, { value, itemValue })
         if (key === 'RKSJ' || key === 'CKSJ') {
           // 时间范围匹配
           return itemValue.startsWith(value)
         }
         // 模糊匹配
-        return itemValue.toLowerCase().includes(value.toLowerCase())
+        return String(itemValue).toLowerCase().includes(value.toLowerCase())
       })
     })
     
+    console.log('Filtered results:', filteredData.length)
     // 限制返回数量，避免数据量过大
     setQueryResults(filteredData.slice(0, 100))
   }
