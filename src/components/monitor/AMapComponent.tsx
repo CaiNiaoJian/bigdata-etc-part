@@ -309,7 +309,7 @@ export default function AMapComponent() {
         const endCity = cities.find(city => city.name === route.end)
         if (startCity && endCity) {
           const midCity = cities.find(city => 
-            ['广州', '东莞', '惠州'][Math.floor(Math.random() * 3)] === city.name
+            ['广东水朗D站', '广东罗田主线站', '松山湖南'][Math.floor(Math.random() * 3)] === city.name
           )
           
           const path = midCity ? 

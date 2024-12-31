@@ -30,6 +30,7 @@ export const translations = {
         type5: '五型车',
         type6: '六型车',
       },
+      provinceDistribution: '省份车辆分布',
       trafficFlow: {
         title: '车流量统计',
         hourly: '小时',

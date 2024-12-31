@@ -16,7 +16,7 @@ export default function HeatMap() {
     // 生成模拟数据
     const hours = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11',
       '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
-    const stations = ['站点1', '站点2', '站点3', '站点4', '站点5', '站点6']
+    const stations = ['广东1', '广东2', '深圳3', '深圳4', '松山5', '惠州6']
     const data: [number, number, number][] = []
     const baseValue = 100
 

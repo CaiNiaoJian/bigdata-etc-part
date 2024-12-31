@@ -22,7 +22,7 @@ export default function ShenzhenFlow() {
       const limitedTotalFlow = Math.min(totalFlow, 150)
       
       // 计算深圳入/出的增量
-      const inFlowInc = Math.floor(limitedTotalFlow * 0.65)
+      const inFlowInc = Math.floor(limitedTotalFlow * 0.55)
       const outFlowInc = limitedTotalFlow - inFlowInc
 
       // 设置增量显示
