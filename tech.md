@@ -3,7 +3,17 @@
 ## 项目概述
 
 ETC 大数据可视化监控平台是一个基于 Next.js 13 构建的现代化交通数据监控系统。该平台采用了最新的前端技术栈，提供实时数据可视化、交互式查询和分析报告等功能。
-###ef49ad请务必注意一点，数据标签和数据集不一样！！！！
+##请务必注意一点，数据标签和数据集不一样！！！！（监视大厅）
+仔细分析项目并在tech.md中添加数据库连接方案。我看了现有的代码和文档。
+### 从项目结构和tech.md的内容来看：
+项目已经实现了前端的交互查询页面(/query)
+数据格式已在 QueryData 接口中定义，tech.md中已包含了API接口设计
+需要添加Mycat数据库连接和数据交互方案
+## 我将在tech.md中添加数据库连接方案，主要包括：
+- Mycat配置
+- 数据库表结构
+- 数据访问层设计
+- 查询优化策略
 
 ## 技术栈
 
@@ -1224,6 +1234,345 @@ interface DeploymentConfig {
         }
       }
     }
+  }
+}
+``` 
+
+## 数据库设计与连接方案
+
+### 数据库表结构
+
+```sql
+CREATE TABLE vehicle_records (
+    XH BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '序号',
+    CP VARCHAR(10) NOT NULL COMMENT '车牌号',
+    CX VARCHAR(20) NOT NULL COMMENT '车型',
+    RKSJ DATETIME NOT NULL COMMENT '入站时间',
+    CKSJ DATETIME COMMENT '出站时间',
+    SFZRKMC VARCHAR(50) NOT NULL COMMENT '入口收费站',
+    SFZCKMC VARCHAR(50) COMMENT '出口收费站',
+    BZ VARCHAR(200) COMMENT '备注',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_cp (CP),
+    INDEX idx_rksj (RKSJ),
+    INDEX idx_cksj (CKSJ),
+    INDEX idx_stations (SFZRKMC, SFZCKMC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='车辆通行记录表';
+```
+
+### Mycat 配置方案
+
+#### 1. 分片策略
+```json
+{
+  "tableRule": {
+    "vehicle_records_rule": {
+      "rule": "mod",
+      "defaultNode": "0",
+      "ruleAlgorithm": {
+        "type": "mod",
+        "count": "4",
+        "column": "XH"
+      }
+    }
+  },
+  "dataNode": {
+    "dn1": {
+      "database": "etc_db_1",
+      "dataHost": "host1"
+    },
+    "dn2": {
+      "database": "etc_db_2",
+      "dataHost": "host2"
+    },
+    "dn3": {
+      "database": "etc_db_3",
+      "dataHost": "host3"
+    },
+    "dn4": {
+      "database": "etc_db_4",
+      "dataHost": "host4"
+    }
+  },
+  "schema": {
+    "etc_schema": {
+      "table": {
+        "vehicle_records": {
+          "primaryKey": "XH",
+          "dataNode": "dn1,dn2,dn3,dn4",
+          "rule": "vehicle_records_rule"
+        }
+      }
+    }
+  }
+}
+```
+
+#### 2. 读写分离配置
+```json
+{
+  "dataHost": {
+    "host1": {
+      "url": "jdbc:mysql://master1:3306",
+      "user": "root",
+      "password": "******",
+      "readHosts": [
+        {"url": "jdbc:mysql://slave1:3306"},
+        {"url": "jdbc:mysql://slave2:3306"}
+      ]
+    }
+  }
+}
+```
+
+### 数据访问层设计
+
+#### 1. 数据模型
+```typescript
+interface VehicleRecord {
+  XH: number
+  CP: string
+  CX: string
+  RKSJ: Date
+  CKSJ: Date | null
+  SFZRKMC: string
+  SFZCKMC: string | null
+  BZ: string | null
+}
+
+interface QueryFilters {
+  CP?: string
+  CX?: string
+  timeRange?: {
+    start: Date
+    end: Date
+  }
+  SFZRKMC?: string
+  SFZCKMC?: string
+  page: number
+  pageSize: number
+}
+```
+
+#### 2. 数据访问接口
+```typescript
+interface VehicleRecordRepository {
+  findById(id: number): Promise<VehicleRecord | null>
+  findByPlate(plate: string): Promise<VehicleRecord[]>
+  search(filters: QueryFilters): Promise<{
+    total: number
+    records: VehicleRecord[]
+  }>
+  create(record: Omit<VehicleRecord, 'XH'>): Promise<VehicleRecord>
+  update(id: number, record: Partial<VehicleRecord>): Promise<boolean>
+  delete(id: number): Promise<boolean>
+}
+```
+
+### 查询优化策略
+
+#### 1. 缓存层配置
+```typescript
+interface CacheStrategy {
+  // Redis缓存配置
+  redis: {
+    host: string
+    port: number
+    keyPrefix: string
+    ttl: number  // 缓存时间（秒）
+  }
+  // 缓存键生成策略
+  keyGenerators: {
+    vehicleRecord: (id: number) => string
+    queryResults: (filters: QueryFilters) => string
+  }
+  // 缓存清理策略
+  invalidation: {
+    patterns: string[]
+    triggers: {
+      onCreate: string[]
+      onUpdate: string[]
+      onDelete: string[]
+    }
+  }
+}
+```
+
+#### 2. SQL优化配置
+```typescript
+interface SQLOptimization {
+  // 查询优化器配置
+  optimizer: {
+    maxLimit: number        // 最大返回记录数
+    defaultPageSize: number // 默认分页大小
+    timeout: number        // 查询超时时间（秒）
+  }
+  // 索引使用策略
+  indexStrategy: {
+    forceIndex?: string[]  // 强制使用的索引
+    ignoreIndex?: string[] // 忽略的索引
+  }
+  // 分页优化
+  pagination: {
+    type: 'offset' | 'cursor'
+    cursorField: string
+  }
+}
+```
+
+### 数据同步机制
+
+#### 1. 实时同步配置
+```typescript
+interface SyncConfig {
+  // Canal配置
+  canal: {
+    host: string
+    port: number
+    destination: string
+    username: string
+    password: string
+  }
+  // 消息队列配置
+  messageQueue: {
+    type: 'kafka' | 'rabbitmq'
+    brokers: string[]
+    topic: string
+    groupId: string
+    options: {
+      retries: number
+      batchSize: number
+      linger: number
+    }
+  }
+}
+```
+
+#### 2. 数据转换规则
+```typescript
+interface DataTransform {
+  // 字段映射规则
+  fieldMapping: {
+    [key: string]: {
+      targetField: string
+      transformer?: (value: any) => any
+    }
+  }
+  // 数据验证规则
+  validation: {
+    [key: string]: {
+      type: string
+      required: boolean
+      pattern?: RegExp
+      min?: number
+      max?: number
+    }
+  }
+}
+```
+
+### 错误处理机制
+
+#### 1. 数据库错误码映射
+```typescript
+interface DBErrorMapping {
+  // MySQL错误码映射
+  mysql: {
+    1045: 'AUTH_FAILED'
+    1049: 'DB_NOT_FOUND'
+    1146: 'TABLE_NOT_FOUND'
+    1062: 'DUPLICATE_ENTRY'
+    1064: 'SYNTAX_ERROR'
+  }
+  // 自定义错误码
+  custom: {
+    QUERY_TIMEOUT: 'QUERY_TIMEOUT'
+    INVALID_PARAMS: 'INVALID_PARAMS'
+    RECORD_NOT_FOUND: 'RECORD_NOT_FOUND'
+    CACHE_MISS: 'CACHE_MISS'
+  }
+}
+```
+
+#### 2. 错误处理策略
+```typescript
+interface ErrorHandlingStrategy {
+  // 重试策略
+  retry: {
+    maxAttempts: number
+    backoff: {
+      type: 'fixed' | 'exponential'
+      delay: number
+    }
+    retryableErrors: string[]
+  }
+  // 降级策略
+  fallback: {
+    enabled: boolean
+    cacheTTL: number
+    staleIfError: boolean
+  }
+  // 告警阈值
+  alerts: {
+    errorRate: number
+    responseTime: number
+    deadlockCount: number
+  }
+}
+```
+
+### 监控指标
+
+#### 1. 性能指标
+```typescript
+interface PerformanceMetrics {
+  // 查询性能指标
+  query: {
+    responseTime: {
+      p50: number
+      p90: number
+      p99: number
+    }
+    throughput: number
+    errorRate: number
+    slowQueries: number
+  }
+  // 连接池指标
+  connectionPool: {
+    active: number
+    idle: number
+    waiting: number
+    maxActive: number
+  }
+  // 缓存指标
+  cache: {
+    hitRate: number
+    missRate: number
+    evictionRate: number
+    size: number
+  }
+}
+```
+
+#### 2. 健康检查配置
+```typescript
+interface HealthCheck {
+  // 数据库健康检查
+  database: {
+    interval: number
+    timeout: number
+    query: string
+  }
+  // Mycat节点健康检查
+  mycat: {
+    nodes: {
+      host: string
+      port: number
+      weight: number
+    }[]
+    checkInterval: number
+    failureThreshold: number
   }
 }
 ``` 
