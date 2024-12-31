@@ -22,9 +22,42 @@ export default function Home() {
           <h1 className="text-4xl md:text-6xl font-bold gradient-text mb-6">
             {t.hero.title}
           </h1>
-          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto mb-8">
             {t.hero.subtitle}
           </p>
+
+          {/* 新年祝福通知栏 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="relative mt-4 bg-gradient-to-r from-red-50/90 to-red-100/90 dark:from-red-900/40 dark:to-red-800/40 border border-red-200/50 dark:border-red-800/30 rounded-lg backdrop-blur-sm"
+          >
+            <div className="relative py-3 px-4">
+              <div className="flex items-center justify-center">
+                {/* 左侧装饰 */}
+                <div className="hidden sm:flex items-center space-x-2 absolute left-2">
+                  <span className="text-red-600 dark:text-red-400 text-xl">🏮</span>
+                  <span className="text-red-600 dark:text-red-400 text-xl">💮</span>
+                </div>
+                
+                {/* 中间文字 */}
+                <div className="flex items-center px-4">
+                  <span className="inline-block text-red-600 dark:text-red-400 text-xl">✨</span>
+                  <p className="mx-3 text-red-600 dark:text-red-400 text-sm sm:text-base font-medium">
+                    闫老师您辛苦了，祝您新年快乐！事业顺利！身体健康！
+                  </p>
+                  <span className="inline-block text-red-600 dark:text-red-400 text-xl">✨</span>
+                </div>
+
+                {/* 右侧装饰 */}
+                <div className="hidden sm:flex items-center space-x-2 absolute right-2">
+                  <span className="text-red-600 dark:text-red-400 text-xl">💮</span>
+                  <span className="text-red-600 dark:text-red-400 text-xl">🏮</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-white/50 dark:from-transparent dark:via-black/5 dark:to-black/50"></div>
       </section>

@@ -8,31 +8,31 @@ import Image from 'next/image'
 const teamMembers = [
   {
     name: 'ohaoz',
-    role: '全栈工程师',
+    role: '后端工程师',
     github: 'github.com/ohaoz',
     avatar: '/team/ohaoz.jpg',
-    responsibilities: '负责优化项目架构、后端Kafka、flink设计，前后端接口开发，docker搭建与集成'
+    responsibilities: '负责优化项目架构、数据转化、后端Kafka高速缓存、flink算法设计，项目docker搭建与集成运行'
   },
   {
     name: 'CaiNiaoJian',
     role: '前端工程师',
     github: 'github.com/CaiNiaoJian',
     avatar: '/team/CaiNiaoJian.jpg',
-    responsibilities: '负责项目架构设计，Next.js与React架构下的typescript前端设计和开发，数据库Rowkey设计，API调用开发'
+    responsibilities: '负责总体项目架构设计，Next.js与React架构下的typescript前端设计和开发，前后端接口设计，API调用开发，技术文档编写'
   },
   {
     name: 'Qinhe',
     role: '数据库与网络运维工程师',
-    github: 'github.com/qinhe',
+    github: 'github.com/qinhe_data',
     avatar: '/team/qinhe.jpg',
-    responsibilities: '负责HBase分片设计和优化，在理论上对数据库进行设计，搭建华为云服务器，参与服务器开发并对云部署作运维'
+    responsibilities: '负责RowKey设计，MySQL数据库分片设计和优化，在理论上对数据库进行设计，搭建华为云服务器，参与服务器开发并对云部署作运维'
   },
   {
     name: 'yq',
     role: '数据科学工程师',
     github: 'github.com/yq',
     avatar: '/team/yq.jpg',
-    responsibilities: '负责对数据进行预处理，对交通数据进行数据挖掘，时间预测序列算法开发，参与数据分析报告的设计与深度学习，并对网站的美术做出指导'
+    responsibilities: '负责对数据进行预处理，对交通数据进行数据挖掘，Xgboost预测模型开发，参与数据分析报告的设计与深度学习'
   }
 ]
 
@@ -147,7 +147,7 @@ export default function AboutPage() {
                 {language === 'zh' ? '技术栈' : 'Tech Stack'}
               </h4>
               <div className="flex flex-wrap gap-2">
-                {['Next.js', 'React', 'TypeScript', 'Kafka', 'Flink', 'HBase', 'Docker', 'Python'].map((tech) => (
+                {['Next.js', 'React', 'TypeScript', 'Kafka', 'Flink', 'MySQL', 'Docker', 'Python'].map((tech) => (
                   <span
                     key={tech}
                     className="px-2 py-1 text-sm bg-gray-100 dark:bg-gray-700 rounded-full text-gray-700 dark:text-gray-300"
