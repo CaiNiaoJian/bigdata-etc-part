@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import QueryForm from '@/components/query/QueryForm'
 import QueryTable from '@/components/query/QueryTable'
@@ -22,24 +22,48 @@ export default function QueryPage() {
   const { language } = useApp()
   const t = translations[language as keyof typeof translations].query
   const [queryResults, setQueryResults] = useState<QueryData[]>([])
+  const [allData, setAllData] = useState<QueryData[]>([])
+
+  // 加载数据
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await fetch('/etc_data.json')
+        const data = await response.json()
+        setAllData(data.map((item: any) => ({
+          XH: item.xh,
+          CP: item.cp,
+          CX: item.cx,
+          RKSJ: item.rksj,
+          CKSJ: item.cksj,
+          SFZRKMC: item.sfzrkmc,
+          SFZCKMC: item.sfzckmc,
+          BZ: item.bz
+        })))
+      } catch (error) {
+        console.error('Error loading data:', error)
+      }
+    }
+    loadData()
+  }, [])
 
   const handleSearch = async (formData: Partial<QueryData>) => {
-    // 模拟API调用
-    console.log('Search with:', formData)
-    // TODO: 替换为实际的API调用
-    const mockData: QueryData[] = [
-      {
-        XH: "001",
-        CP: "浙A12345",
-        CX: "小型车",
-        RKSJ: "2024-01-01 08:00:00",
-        CKSJ: "2024-01-01 10:30:00",
-        SFZRKMC: "杭州东站",
-        SFZCKMC: "绍兴北站",
-        BZ: "正常通行"
-      }
-    ]
-    setQueryResults(mockData)
+    // 过滤数据
+    const filteredData = allData.filter(item => {
+      return Object.entries(formData).every(([key, value]) => {
+        if (!value) return true // 空值不过滤
+        const itemValue = item[key as keyof QueryData]
+        if (key === 'RKSJ' || key === 'CKSJ') {
+          // 时间范围匹配
+          return itemValue.startsWith(value)
+        }
+        // 模糊匹配
+        return itemValue.toLowerCase().includes(value.toLowerCase())
+      })
+    })
+    
+    // 限制返回数量，避免数据量过大
+    setQueryResults(filteredData.slice(0, 100))
   }
 
   return (
