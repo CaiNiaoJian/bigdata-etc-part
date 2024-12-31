@@ -111,13 +111,55 @@ export default function SankeyChart() {
       const nodeMap = new Map(uniqueNodes.map((name, idx) => [name, idx]))
 
       // 5. 生成 nodes & links
-      const nodes: SankeyNode[] = uniqueNodes.map(name => ({
-        name,
-        itemStyle: {
-          // 简单根据名字包含"深圳"来区别颜色
-          color: name.includes('深圳') ? '#95de64' : '#69c0ff',
-        }
-      }))
+      const nodes: SankeyNode[] = uniqueNodes.map(name => {
+        // 根据节点名称和在路径中的位置选择颜色
+        const getNodeColor = (nodeName: string, nodeIndex: number) => {
+          // 检查节点在路径中的位置（是否作为源节点或目标节点出现得更多）
+          let sourceCount = 0;
+          let targetCount = 0;
+          topPaths.forEach(path => {
+            if (path.source === nodeName) sourceCount++;
+            if (path.target === nodeName) targetCount++;
+          });
+          
+          // 根据节点位置选择颜色系列
+          if (sourceCount > targetCount) {
+            // 入口站点：暖色系
+            return [
+              '#ff9c6e', // 珊瑚色
+              '#ffc069', // 金色
+              '#ffd666', // 黄色
+              '#ff85c0', // 粉色
+              '#ff7875'  // 红色
+            ][nodeIndex % 5];
+          } else if (targetCount > sourceCount) {
+            // 出口站点：冷色系
+            return [
+              '#69c0ff', // 天蓝色
+              '#5cdbd3', // 青色
+              '#85a5ff', // 蓝色
+              '#b37feb', // 紫色
+              '#69b1ff'  // 深蓝色
+            ][nodeIndex % 5];
+          } else {
+            // 中转站点：中性色系
+            return [
+              '#95de64', // 绿色
+              '#b7eb8f', // 浅绿色
+              '#87e8de', // 青绿色
+              '#9254de', // 紫色
+              '#597ef7'  // 蓝紫色
+            ][nodeIndex % 5];
+          }
+        };
+
+        return {
+          name,
+          itemStyle: {
+            color: getNodeColor(name, uniqueNodes.indexOf(name))
+          }
+        };
+      });
       const rawLinks: SankeyLink[] = topPaths.map(({ source, target, frequency }) => ({
         source: nodeMap.get(source)!,
         target: nodeMap.get(target)!,
@@ -292,7 +334,7 @@ export default function SankeyChart() {
             },
             lineStyle: {
               color: 'source',
-              opacity: 0.4,
+              opacity: 0.5,
               curveness: 0.5
             }
           }
