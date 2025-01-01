@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useApp } from '@/context/AppContext'
 import * as echarts from 'echarts'
 import ReactECharts from 'echarts-for-react'
@@ -14,9 +14,9 @@ type Station = {
 }
 
 const stations: Station[] = [
-  { id: 1, name: { zh: '深圳湾口岸', en: 'Shenzhen Bay Port' } },
-  { id: 2, name: { zh: '福田口岸', en: 'Futian Port' } },
-  { id: 3, name: { zh: '皇岗口岸', en: 'Huanggang Port' } }
+  { id: 1, name: { zh: '广东水郎D站', en: 'Shenzhen Bay Port' } },
+  { id: 2, name: { zh: '松山南湖', en: 'Futian Port' } },
+  { id: 3, name: { zh: '广东罗田', en: 'Huanggang Port' } }
 ]
 
 const generateForecastData = () => {
@@ -35,9 +35,9 @@ const generateForecastData = () => {
     
     data.push({
       time: time.toLocaleTimeString('en-US', { hour: '2-digit', hour12: false }),
-      '深圳湾口岸': Math.floor(baseFlow * (1 + Math.random() * 0.3)),
-      '福田口岸': Math.floor(baseFlow * 0.8 * (1 + Math.random() * 0.3)),
-      '皇岗口岸': Math.floor(baseFlow * 0.6 * (1 + Math.random() * 0.3))
+      '广东水郎D站': Math.floor(baseFlow * (1 + Math.random() * 0.3)),
+      '松山南湖': Math.floor(baseFlow * 0.8 * (1 + Math.random() * 0.3)),
+      '广东罗田': Math.floor(baseFlow * 0.6 * (1 + Math.random() * 0.3))
     })
   }
   
@@ -48,7 +48,23 @@ export default function StationFlowForecast() {
   const { language } = useApp()
   const chartRef = useRef<ReactECharts>(null)
   const data = generateForecastData()
-  const isDarkMode = document.documentElement.classList.contains('dark')
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  useEffect(() => {
+    setIsDarkMode(document.documentElement.classList.contains('dark'))
+    
+    // 监听主题变化
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'))
+    })
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    })
+
+    return () => observer.disconnect()
+  }, [])
 
   const getOption = () => ({
     title: {
@@ -132,23 +148,6 @@ export default function StationFlowForecast() {
       chart.setOption(getOption())
     }
   }, [language])
-
-  // 监听主题变化
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const isDark = document.documentElement.classList.contains('dark')
-      if (chartRef.current) {
-        chartRef.current.getEchartsInstance().setOption(getOption())
-      }
-    })
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    })
-
-    return () => observer.disconnect()
-  }, [])
 
   return (
     <div className="h-full flex flex-col">
