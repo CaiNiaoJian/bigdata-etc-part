@@ -26,7 +26,7 @@ const reports: Report[] = [
       en: 'Traffic Flow Anomaly Alert'
     },
     content: {
-      zh: '根据实时监测数据显示，深圳湾口岸在过去一小时内的车流量突增45%，建议及时调配人员进行疏导。预计此高峰将持续约2小时，请相关部门做好应对准备。',
+      zh: '根据实时监测数据显示，广东罗田站在过去一小时内的车流量突增45%，建议及时调配人员进行疏导。预计此高峰将持续约2小时，请相关部门做好应对准备。',
       en: 'Real-time monitoring data shows a 45% surge in traffic flow at Shenzhen Bay Port in the past hour. It is recommended to deploy personnel for traffic guidance. This peak is expected to last about 2 hours. Please prepare accordingly.'
     },
     date: '2020-12-22 14:30',

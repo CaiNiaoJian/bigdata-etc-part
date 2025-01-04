@@ -25,7 +25,7 @@ const teamMembers = [
     role: '数据库与网络运维工程师',
     github: 'github.com/qinhe_data',
     avatar: '/team/qinhe.jpg',
-    responsibilities: '负责MySQL数据库分片设计和优化，在理论上对数据库进行设计，搭建华为云服务器，参与服务器开发并对云部署作运维'
+    responsibilities: '负责MySQL数据库分片设计和优化，对数据库进行设计'
   },
   {
     name: 'yq',
